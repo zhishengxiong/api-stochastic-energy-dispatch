@@ -1,0 +1,29 @@
+services:
+  postgres_database:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      - ./scripts/init_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+
+  tssp_api:
+    build: .
+    ports:
+      - "8888:8000"
+    environment:
+      DB_HOST: postgres_database
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      GRB_LICENSE_FILE: /app/gurobi.lic
+    volumes:
+      - C:/Users/zhishengxiong/gurobi_wls.lic:/app/gurobi.lic:ro
+    depends_on:
+      - postgres_database
+
+volumes:
+  postgres_data:

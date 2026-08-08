@@ -1,0 +1,24 @@
+# Version control
+.git
+.gitignore
+
+# Local environment / secrets
+.env
+
+# IDE
+.idea/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Test cache
+.pytest_cache/
+
+# Tests are not needed in the runtime image
+tests/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
