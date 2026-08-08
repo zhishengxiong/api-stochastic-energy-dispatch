@@ -1,81 +1,42 @@
-name: CI
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
 
-# Run CI when code is pushed to main
-# or when a pull request targets main.
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+[project]
+name = "api-stochastic-energy-dispatch"
+version = "0.0.0"
+description = "API for running and managing two-stage stochastic energy dispatch in distribution networks."
+requires-python = ">=3.12"
 
-jobs:
+dependencies = [
+    "fastapi",
+    "uvicorn",
+    "psycopg[binary]",
+    "numpy",
+    "pandas",
+    "openpyxl",
+    "scipy",
+    "gurobipy",
+    "python-dotenv",
+]
 
-  # Check Python code quality and run automated tests.
-  test:
-    runs-on: ubuntu-latest
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "ruff",
+    "httpx2",
+]
 
-    steps:
-      # Download the repository code to the GitHub runner.
-      - name: Checkout repository
-        uses: actions/checkout@v4
+[tool.setuptools.packages.find]
+where = ["src"]
 
-      # Install the Python version used by this project.
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
 
-      # Install the project together with testing tools
-      # defined in pyproject.toml.
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -e ".[test]"
+[tool.ruff]
+line-length = 100
+target-version = "py312"
 
-      # Check code style and common Python issues.
-      - name: Run Ruff
-        run: python -m ruff check .
-
-      # Check whether source files follow Ruff formatting.
-      - name: Check formatting
-        run: python -m ruff format --check .
-
-      # Run the automated test suite.
-      - name: Run tests
-        run: pytest
-
-  # Verify that the application can be packaged and started
-  # successfully inside Docker.
-  docker:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # Build the same Docker image that is used locally.
-      - name: Build Docker image
-        run: docker build -t api-stochastic-energy-dispatch .
-
-      # Start the API container.
-      # Dummy database settings are sufficient here because
-      # the health endpoint does not access PostgreSQL.
-      - name: Start API container
-        run: |
-          docker run -d \
-            --name tssp-api \
-            -p 8000:8000 \
-            -e DB_HOST=dummy \
-            -e DB_PORT=5432 \
-            -e DB_NAME=dummy \
-            -e DB_USER=dummy \
-            -e DB_PASSWORD=dummy \
-            api-stochastic-energy-dispatch
-
-      # Give Uvicorn a few seconds to start.
-      - name: Wait for API
-        run: sleep 5
-
-      # Smoke test: verify that FastAPI is actually reachable.
-      - name: Test API health endpoint
-        run: curl --fail http://localhost:8000/
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]
