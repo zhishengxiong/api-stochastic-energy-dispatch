@@ -61,8 +61,7 @@ def _validate_model_inputs(
 
     if system_data.A.shape != expected_square_shape:
         raise ValueError(
-            f"A must have shape {expected_square_shape}, "
-            f"but found {system_data.A.shape}."
+            f"A must have shape {expected_square_shape}, but found {system_data.A.shape}."
         )
 
     if system_data.R_prime.shape != expected_square_shape:
@@ -80,8 +79,7 @@ def _validate_model_inputs(
     expected_load_shape = (num_non_slack_nodes, T)
     if system_data.P_load.shape != expected_load_shape:
         raise ValueError(
-            f"P_load must have shape {expected_load_shape}, "
-            f"but found {system_data.P_load.shape}."
+            f"P_load must have shape {expected_load_shape}, but found {system_data.P_load.shape}."
         )
 
     if system_data.PD_base.shape != (num_non_slack_nodes, 1):
@@ -95,8 +93,7 @@ def _validate_model_inputs(
 
     if scenarios is None or num_scenarios is None:
         raise KeyError(
-            "empirical_samples_info must contain "
-            "'empirical_samples' and 'num_empirical_samples'."
+            "empirical_samples_info must contain 'empirical_samples' and 'num_empirical_samples'."
         )
 
     if num_scenarios <= 0:
@@ -126,10 +123,7 @@ def _validate_model_inputs(
 
         invalid_nodes = set(nodes) - valid_device_nodes
         if invalid_nodes:
-            raise ValueError(
-                f"{name} contain invalid or slack node IDs: "
-                f"{sorted(invalid_nodes)}."
-            )
+            raise ValueError(f"{name} contain invalid or slack node IDs: {sorted(invalid_nodes)}.")
 
     occupied_nodes = {}
     for device_type, nodes in device_groups.items():
@@ -164,8 +158,7 @@ def _raise_if_not_optimal(model: Model) -> None:
 
     status_name = status_names.get(model.status, "UNKNOWN")
     raise RuntimeError(
-        f"TSSP optimization failed with Gurobi status "
-        f"{status_name} ({model.status})."
+        f"TSSP optimization failed with Gurobi status {status_name} ({model.status})."
     )
 
 
@@ -224,10 +217,7 @@ def solve_tssp(
             scenario_idx,
             scenario,
         )
-        expected_recourse_cost += (
-            model_data.params_data.scenario_probability
-            * recourse_cost
-        )
+        expected_recourse_cost += model_data.params_data.scenario_probability * recourse_cost
 
     # 6. OBJECTIVE FUNCTION
     total_cost = first_stage_obj + expected_recourse_cost
@@ -484,18 +474,14 @@ def add_first_stage_cons(
             for e in range(len(ESS_node)):
                 model.addConstr(
                     ESS_E[e, t]
-                    == ESS_Eini[e]
-                    + ESS_eff[e] * ESS_pch[e, t]
-                    - ESS_pdis[e, t] / ESS_eff[e],
+                    == ESS_Eini[e] + ESS_eff[e] * ESS_pch[e, t] - ESS_pdis[e, t] / ESS_eff[e],
                     name=f"ESS_energy_rule_{e}_{t}",
                 )
         else:
             for e in range(len(ESS_node)):
                 model.addConstr(
                     ESS_E[e, t]
-                    == ESS_E[e, t - 1]
-                    + ESS_eff[e] * ESS_pch[e, t]
-                    - ESS_pdis[e, t] / ESS_eff[e],
+                    == ESS_E[e, t - 1] + ESS_eff[e] * ESS_pch[e, t] - ESS_pdis[e, t] / ESS_eff[e],
                     name=f"ESS_energy_rule_{e}_{t}",
                 )
 
@@ -523,10 +509,7 @@ def add_first_stage_cons(
             e = ESS_node.index(node_id)
             for t in range(T):
                 model.addConstr(
-                    P_net[n, t]
-                    == P_load[n, t]
-                    + ESS_pdis[e, t]
-                    - ESS_pch[e, t],
+                    P_net[n, t] == P_load[n, t] + ESS_pdis[e, t] - ESS_pch[e, t],
                     name=f"P_net_rule_{n}_{t}",
                 )
 
@@ -581,14 +564,8 @@ def add_first_stage_obj(
         quicksum(G_p[:, t] for t in range(T)) @ G_cost
         + quicksum(G_s[:, t] for t in range(T)) @ G_Ucost
         + quicksum(R_pmax[:, t] for t in range(T)) @ R_cost
-        + quicksum(
-            flow_buy[t] * electricity_price[t]
-            for t in range(T)
-        )
-        - quicksum(
-            flow_sell[t] * electricity_price[t] * 0.8
-            for t in range(T)
-        )
+        + quicksum(flow_buy[t] * electricity_price[t] for t in range(T))
+        - quicksum(flow_sell[t] * electricity_price[t] * 0.8 for t in range(T))
     )
 
 
@@ -890,13 +867,11 @@ def add_recourse_cons(
             g = G_node.index(node_id)
             for t in range(T):
                 model.addConstr(
-                    P_net_2S[n, t]
-                    == P_load_real[n, t] + G_p_reg[g, t],
+                    P_net_2S[n, t] == P_load_real[n, t] + G_p_reg[g, t],
                     name=f"P_net_2S_rule_{scenario_idx}_{n}_{t}",
                 )
                 model.addConstr(
-                    Q_net[n, t]
-                    == Q_load[n, t] + G_q[g, t],
+                    Q_net[n, t] == Q_load[n, t] + G_q[g, t],
                     name=f"Q_net_rule_{scenario_idx}_{n}_{t}",
                 )
 
@@ -904,13 +879,11 @@ def add_recourse_cons(
             r = R_node.index(node_id)
             for t in range(T):
                 model.addConstr(
-                    P_net_2S[n, t]
-                    == P_load_real[n, t] + R_p[r, t],
+                    P_net_2S[n, t] == P_load_real[n, t] + R_p[r, t],
                     name=f"P_net_2S_rule_{scenario_idx}_{n}_{t}",
                 )
                 model.addConstr(
-                    Q_net[n, t]
-                    == Q_load[n, t] + R_q[r, t],
+                    Q_net[n, t] == Q_load[n, t] + R_q[r, t],
                     name=f"Q_net_rule_{scenario_idx}_{n}_{t}",
                 )
 
@@ -918,8 +891,7 @@ def add_recourse_cons(
             pv = PV_node.index(node_id)
             for t in range(T):
                 model.addConstr(
-                    P_net_2S[n, t]
-                    == P_load_real[n, t] + PV_real[pv, t],
+                    P_net_2S[n, t] == P_load_real[n, t] + PV_real[pv, t],
                     name=f"P_net_2S_rule_{scenario_idx}_{n}_{t}",
                 )
                 model.addConstr(
@@ -931,10 +903,7 @@ def add_recourse_cons(
             e = ESS_node.index(node_id)
             for t in range(T):
                 model.addConstr(
-                    P_net_2S[n, t]
-                    == P_load_real[n, t]
-                    + ESS_pdis[e, t]
-                    - ESS_pch[e, t],
+                    P_net_2S[n, t] == P_load_real[n, t] + ESS_pdis[e, t] - ESS_pch[e, t],
                     name=f"P_net_2S_rule_{scenario_idx}_{n}_{t}",
                 )
                 model.addConstr(
@@ -964,10 +933,7 @@ def add_recourse_cons(
             name=f"Q_Ban_{scenario_idx}_{t}",
         )
         model.addConstr(
-            v[:, t]
-            == params_data.v0
-            + R_prime @ P_net_2S[:, t]
-            + X_prime @ Q_net[:, t],
+            v[:, t] == params_data.v0 + R_prime @ P_net_2S[:, t] + X_prime @ Q_net[:, t],
             name=f"v_rule_{scenario_idx}_{t}",
         )
 
@@ -988,33 +954,26 @@ def add_recourse_cons(
             name=f"P_sell_2S_dn_limit_{scenario_idx}_{t}",
         )
         model.addConstr(
-            P_flow_2S[0, t]
-            == flow_buy_2S[t] - flow_sell_2S[t],
+            P_flow_2S[0, t] == flow_buy_2S[t] - flow_sell_2S[t],
             name=f"substation_2S_{scenario_idx}_{t}",
         )
 
     # 5.6 Uncertainty realization and feasibility adjustment
     pv_scale = scenario[:T]
-    load_scale = scenario[T: 2 * T]
+    load_scale = scenario[T : 2 * T]
 
     for t in range(T):
         model.addConstr(
             P_load_real[:, t]
-            == -PD_base[:, 0] * load_scale[t]
-            + load_slack_2S[t]
-            - load_surplus_2S[t],
+            == -PD_base[:, 0] * load_scale[t] + load_slack_2S[t] - load_surplus_2S[t],
             name=f"P_load_real_rule_{scenario_idx}_{t}",
         )
         model.addConstr(
-            PV_real[:, t]
-            == PV_cap[:, 0] * pv_scale[t]
-            + pv_slack_2S[t]
-            - pv_surplus_2S[t],
+            PV_real[:, t] == PV_cap[:, 0] * pv_scale[t] + pv_slack_2S[t] - pv_surplus_2S[t],
             name=f"PV_real_rule_{scenario_idx}_{t}",
         )
         model.addConstr(
-            Q_load[:, t]
-            == P_load_real[:, t] * params_data.power_factor,
+            Q_load[:, t] == P_load_real[:, t] * params_data.power_factor,
             name=f"Q_load_rule_{scenario_idx}_{t}",
         )
 
@@ -1047,34 +1006,13 @@ def add_recourse_obj(
     pv_surplus_2S = recourse_vars["pv_surplus_2S"]
 
     return (
-        quicksum(
-            (G_p_reg[:, t] - G_p[:, t]) @ G_cost
-            for t in range(T)
-        )
-        + quicksum(
-            (flow_buy_2S[t] - flow_buy[t])
-            * electricity_price[t]
-            * 1.4
-            for t in range(T)
-        )
-        - quicksum(
-            (flow_sell_2S[t] - flow_sell[t])
-            * electricity_price[t]
-            * 0.6
-            for t in range(T)
-        )
+        quicksum((G_p_reg[:, t] - G_p[:, t]) @ G_cost for t in range(T))
+        + quicksum((flow_buy_2S[t] - flow_buy[t]) * electricity_price[t] * 1.4 for t in range(T))
+        - quicksum((flow_sell_2S[t] - flow_sell[t]) * electricity_price[t] * 0.6 for t in range(T))
         + quicksum(
             (
-                (
-                    load_slack_2S[t]
-                    + load_surplus_2S[t]
-                )
-                * num_non_slack_nodes
-                + (
-                    pv_slack_2S[t]
-                    + pv_surplus_2S[t]
-                )
-                * len(PV_node)
+                (load_slack_2S[t] + load_surplus_2S[t]) * num_non_slack_nodes
+                + (pv_slack_2S[t] + pv_surplus_2S[t]) * len(PV_node)
             )
             for t in range(T)
         )

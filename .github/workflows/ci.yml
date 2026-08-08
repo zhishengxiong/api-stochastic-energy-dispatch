@@ -28,16 +28,21 @@ jobs:
       # Install the project together with testing tools
       # defined in pyproject.toml.
       - name: Install dependencies
-        run: pip install -e ".[test]"
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
 
       # Check code style and common Python issues.
       - name: Run Ruff
-        run: ruff check .
+        run: python -m ruff check .
+
+      # Check whether source files follow Ruff formatting.
+      - name: Check formatting
+        run: python -m ruff format --check .
 
       # Run the automated test suite.
       - name: Run tests
         run: pytest
-
 
   # Verify that the application can be packaged and started
   # successfully inside Docker.
@@ -50,7 +55,7 @@ jobs:
 
       # Build the same Docker image that is used locally.
       - name: Build Docker image
-        run: docker build -t stochastic-energy-dispatch .
+        run: docker build -t api-stochastic-energy-dispatch .
 
       # Start the API container.
       # Dummy database settings are sufficient here because
@@ -65,7 +70,7 @@ jobs:
             -e DB_NAME=dummy \
             -e DB_USER=dummy \
             -e DB_PASSWORD=dummy \
-            stochastic-energy-dispatch
+            api-stochastic-energy-dispatch
 
       # Give Uvicorn a few seconds to start.
       - name: Wait for API

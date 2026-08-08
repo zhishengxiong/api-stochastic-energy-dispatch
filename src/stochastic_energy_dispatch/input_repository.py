@@ -175,8 +175,6 @@ def fetch_historical_scenarios(
     )
 
 
-
-
 def read_optimization_run(connection, run_id: int):
     _validate_positive_int(run_id, "run_id")
 

@@ -118,10 +118,7 @@ def test_save_tssp_results_writes_all_result_groups():
     # generator, reserve, storage, node, line, grid exchange
     assert len(cursor.executemany_calls) == 6
 
-    row_counts = [
-        len(rows)
-        for _, rows in cursor.executemany_calls
-    ]
+    row_counts = [len(rows) for _, rows in cursor.executemany_calls]
 
     assert row_counts == [
         2,  # 1 generator x 2 periods

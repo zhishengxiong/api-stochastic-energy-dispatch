@@ -41,9 +41,7 @@ def read_network_data(connection, T):
 
 def _validate_network_data(raw_nodes, raw_lines, num_nodes):
     if len(raw_nodes) != num_nodes:
-        raise ValueError(
-            f"Expected {num_nodes} nodes, but found {len(raw_nodes)}."
-        )
+        raise ValueError(f"Expected {num_nodes} nodes, but found {len(raw_nodes)}.")
 
     if len(raw_lines) != num_nodes - 1:
         raise ValueError(
@@ -60,15 +58,11 @@ def _validate_network_data(raw_nodes, raw_lines, num_nodes):
         )
 
     valid_node_ids = set(raw_nodes["node_id"].astype(int))
-    line_node_ids = set(raw_lines[FROM_COLUMN].astype(int)) | set(
-        raw_lines[TO_COLUMN].astype(int)
-    )
+    line_node_ids = set(raw_lines[FROM_COLUMN].astype(int)) | set(raw_lines[TO_COLUMN].astype(int))
 
     unknown_node_ids = line_node_ids - valid_node_ids
     if unknown_node_ids:
-        raise ValueError(
-            f"Lines reference unknown node IDs: {sorted(unknown_node_ids)}."
-        )
+        raise ValueError(f"Lines reference unknown node IDs: {sorted(unknown_node_ids)}.")
 
 
 def build_reduced_incidence_matrix(raw_lines, num_nodes):
@@ -104,10 +98,7 @@ def build_voltage_sensitivity_matrices(raw_lines, A_inv):
 
 def build_load_profiles(raw_nodes, raw_demand, T):
     if raw_demand.shape[1] < T:
-        raise ValueError(
-            f"Demand profile length {raw_demand.shape[1]} "
-            f"is shorter than T={T}."
-        )
+        raise ValueError(f"Demand profile length {raw_demand.shape[1]} is shorter than T={T}.")
 
     load_nodes = raw_nodes.loc[~raw_nodes["is_slack"]].copy()
     load_nodes = load_nodes.sort_values("node_id")
@@ -142,8 +133,7 @@ def build_system_data(connection, num_nodes, T):
         A_inv = np.linalg.inv(A)
     except np.linalg.LinAlgError as error:
         raise ValueError(
-            "Reduced incidence matrix is singular; "
-            "check network connectivity and topology."
+            "Reduced incidence matrix is singular; check network connectivity and topology."
         ) from error
 
     R_prime, X_prime = build_voltage_sensitivity_matrices(raw_lines, A_inv)

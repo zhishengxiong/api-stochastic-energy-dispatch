@@ -24,26 +24,17 @@ def validate_source_files():
         LOAD_HISTORY_FILE,
     ]
 
-    missing_files = [
-        str(file_path)
-        for file_path in required_files
-        if not file_path.is_file()
-    ]
+    missing_files = [str(file_path) for file_path in required_files if not file_path.is_file()]
 
     if missing_files:
-        raise FileNotFoundError(
-            "Missing seed-data files: "
-            + ", ".join(missing_files)
-        )
+        raise FileNotFoundError("Missing seed-data files: " + ", ".join(missing_files))
 
 
 def validate_numeric_values(dataframe, name):
     numeric_values = dataframe.select_dtypes(include="number").to_numpy()
 
     if numeric_values.size and not np.isfinite(numeric_values).all():
-        raise ValueError(
-            f"{name} contains missing or non-finite numeric values."
-        )
+        raise ValueError(f"{name} contains missing or non-finite numeric values.")
 
 
 def clear_tables(cursor):
@@ -232,10 +223,7 @@ def load_energy_storage(cursor):
 def load_electricity_prices(cursor):
     df = pd.read_excel(DERS_FILE, sheet_name="Prices")
 
-    rows = [
-        (time_step, float(price))
-        for time_step, price in enumerate(df["1"])
-    ]
+    rows = [(time_step, float(price)) for time_step, price in enumerate(df["1"])]
 
     cursor.executemany(
         """
@@ -278,10 +266,7 @@ def load_pv_units(cursor):
 def load_pv_forecasts(cursor):
     df = pd.read_excel(DERS_FILE, sheet_name="PVPredictive")
 
-    rows = [
-        (time_step, float(pv_scale))
-        for time_step, pv_scale in enumerate(df["1"])
-    ]
+    rows = [(time_step, float(pv_scale)) for time_step, pv_scale in enumerate(df["1"])]
 
     cursor.executemany(
         """
@@ -326,9 +311,7 @@ def build_scenario_rows(pv_df, load_df, first_sample, last_sample):
         raise ValueError("first_sample must be greater than 0.")
 
     if last_sample < first_sample:
-        raise ValueError(
-            "last_sample must be greater than or equal to first_sample."
-        )
+        raise ValueError("last_sample must be greater than or equal to first_sample.")
 
     if len(pv_df) != len(load_df):
         raise ValueError(
@@ -340,14 +323,12 @@ def build_scenario_rows(pv_df, load_df, first_sample, last_sample):
 
     if pv_df.index.tolist() != expected_index:
         raise ValueError(
-            "PV scenario rows must use consecutive time indices "
-            f"0 to {len(pv_df) - 1}."
+            f"PV scenario rows must use consecutive time indices 0 to {len(pv_df) - 1}."
         )
 
     if load_df.index.tolist() != expected_index:
         raise ValueError(
-            "Load scenario rows must use consecutive time indices "
-            f"0 to {len(load_df) - 1}."
+            f"Load scenario rows must use consecutive time indices 0 to {len(load_df) - 1}."
         )
 
     validate_numeric_values(pv_df, "PV scenario data")
@@ -401,10 +382,8 @@ def load_scenarios(cursor):
         historical_rows,
     )
 
-    print(
-        f"Loaded {len(historical_rows)} rows "
-        "into historical_scenarios."
-    )
+    print(f"Loaded {len(historical_rows)} rows into historical_scenarios.")
+
 
 def load_seed_data():
     validate_source_files()

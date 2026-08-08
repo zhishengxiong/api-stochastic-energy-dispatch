@@ -22,9 +22,7 @@ def _validate_sample_table(sample_table, T, num_samples, sample_name):
     values = sample_table.to_numpy(dtype=float)
 
     if not np.isfinite(values).all():
-        raise ValueError(
-            f"{sample_name} samples contain missing or non-finite values."
-        )
+        raise ValueError(f"{sample_name} samples contain missing or non-finite values.")
 
     return values
 
@@ -60,9 +58,7 @@ def read_historical_scenarios(connection, T, num_samples):
     )
 
     if not pv_samples.index.equals(load_samples.index):
-        raise ValueError(
-            "PV and load samples do not contain the same sample IDs."
-        )
+        raise ValueError("PV and load samples do not contain the same sample IDs.")
 
     pv_values = _validate_sample_table(
         pv_samples,

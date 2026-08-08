@@ -13,7 +13,8 @@ def test_tssp_run_request_uses_defaults():
 
 @pytest.mark.parametrize(
     ("field_name", "invalid_value"),
-    [        ("T", 0),
+    [
+        ("T", 0),
         ("num_samples", 0),
         ("num_samples", 501),
     ],

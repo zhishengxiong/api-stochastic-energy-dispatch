@@ -77,9 +77,7 @@ def test_create_run_hides_internal_error(monkeypatch):
     )
 
     assert response.status_code == 500
-    assert response.json() == {
-        "detail": "TSSP optimization run failed."
-    }
+    assert response.json() == {"detail": "TSSP optimization run failed."}
     assert "secret" not in response.text
 
 
@@ -118,9 +116,7 @@ def test_read_run_returns_404(monkeypatch):
     response = client.get("/runs/999")
 
     assert response.status_code == 404
-    assert response.json() == {
-        "detail": "Run 999 not found."
-    }
+    assert response.json() == {"detail": "Run 999 not found."}
 
 
 def test_read_run_rejects_non_positive_run_id():

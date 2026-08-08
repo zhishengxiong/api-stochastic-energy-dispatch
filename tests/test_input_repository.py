@@ -10,10 +10,7 @@ from stochastic_energy_dispatch import input_repository
 class FakeCursor:
     def __init__(self, rows=None, columns=None, one_row=None):
         self.rows = rows or []
-        self.description = [
-            SimpleNamespace(name=name)
-            for name in (columns or [])
-        ]
+        self.description = [SimpleNamespace(name=name) for name in (columns or [])]
         self.one_row = one_row
         self.executed = []
 

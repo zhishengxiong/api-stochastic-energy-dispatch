@@ -15,8 +15,10 @@ def test_tssp_run_config_accepts_valid_values():
 
 @pytest.mark.parametrize(
     ("field_name", "invalid_value"),
-    [        ("T", 0),
-        ("num_samples", 0),        ("T", -1),
+    [
+        ("T", 0),
+        ("num_samples", 0),
+        ("T", -1),
         ("num_samples", -1),
         ("num_samples", 501),
     ],

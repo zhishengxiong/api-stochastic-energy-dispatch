@@ -8,9 +8,7 @@ def _validate_tssp_result(tssp_result) -> dict:
     missing_result_keys = required_result_keys - tssp_result.keys()
 
     if missing_result_keys:
-        raise KeyError(
-            f"Missing TSSP result keys: {sorted(missing_result_keys)}"
-        )
+        raise KeyError(f"Missing TSSP result keys: {sorted(missing_result_keys)}")
 
     x_hat = tssp_result["x_hat"]
 
@@ -33,28 +31,20 @@ def _validate_tssp_result(tssp_result) -> dict:
     missing_x_hat_keys = required_x_hat_keys - x_hat.keys()
 
     if missing_x_hat_keys:
-        raise KeyError(
-            f"Missing first-stage result keys: {sorted(missing_x_hat_keys)}"
-        )
+        raise KeyError(f"Missing first-stage result keys: {sorted(missing_x_hat_keys)}")
 
     return x_hat
 
 
 def _validate_ders_ids(ders_data) -> None:
     if len(ders_data.G_id) != len(ders_data.G_node):
-        raise ValueError(
-            "Generator IDs and generator nodes have different lengths."
-        )
+        raise ValueError("Generator IDs and generator nodes have different lengths.")
 
     if len(ders_data.R_id) != len(ders_data.R_node):
-        raise ValueError(
-            "Reserve IDs and reserve nodes have different lengths."
-        )
+        raise ValueError("Reserve IDs and reserve nodes have different lengths.")
 
     if len(ders_data.ESS_id) != len(ders_data.ESS_node):
-        raise ValueError(
-            "Storage IDs and storage nodes have different lengths."
-        )
+        raise ValueError("Storage IDs and storage nodes have different lengths.")
 
 
 def save_tssp_results(

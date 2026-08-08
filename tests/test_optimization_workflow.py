@@ -45,11 +45,7 @@ def test_run_case_orchestrates_full_workflow(monkeypatch):
     monkeypatch.setattr(
         optimization_workflow.tssp,
         "solve_tssp",
-        lambda system_data_arg,
-        ders_data_arg,
-        samples_info_arg,
-        num_nodes,
-        T: {
+        lambda system_data_arg, ders_data_arg, samples_info_arg, num_nodes, T: {
             "cost": 21081.051,
             "x_hat": {},
         },
@@ -58,12 +54,7 @@ def test_run_case_orchestrates_full_workflow(monkeypatch):
     monkeypatch.setattr(
         optimization_workflow.output_repository,
         "save_tssp_results",
-        lambda connection,
-        tssp_result,
-        ders_data_arg,
-        num_nodes,
-        T,
-        num_samples: 37,
+        lambda connection, tssp_result, ders_data_arg, num_nodes, T, num_samples: 37,
     )
 
     config = TSSPRunConfig(
