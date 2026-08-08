@@ -1,42 +1,62 @@
-[build-system]
-requires = ["setuptools>=68"]
-build-backend = "setuptools.build_meta"
+name: CI
 
-[project]
-name = "api-stochastic-energy-dispatch"
-version = "0.0.0"
-description = "API for running and managing two-stage stochastic energy dispatch in distribution networks."
-requires-python = ">=3.12"
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
-dependencies = [
-    "fastapi",
-    "uvicorn",
-    "psycopg[binary]",
-    "numpy",
-    "pandas",
-    "openpyxl",
-    "scipy",
-    "gurobipy",
-    "python-dotenv",
-]
+jobs:
+  test:
+    runs-on: ubuntu-latest
 
-[project.optional-dependencies]
-test = [
-    "pytest",
-    "ruff",
-    "httpx2",
-]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-[tool.setuptools.packages.find]
-where = ["src"]
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-[tool.pytest.ini_options]
-testpaths = ["tests"]
-pythonpath = ["src"]
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[test]"
 
-[tool.ruff]
-line-length = 100
-target-version = "py312"
+      - name: Run Ruff
+        run: python -m ruff check .
 
-[tool.ruff.lint]
-select = ["E", "F", "I", "B"]
+      - name: Check formatting
+        run: python -m ruff format --check .
+
+      - name: Run tests
+        run: pytest
+
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t api-stochastic-energy-dispatch .
+
+      - name: Start API container
+        run: |
+          docker run -d \
+            --name tssp-api \
+            -p 8000:8000 \
+            -e DB_HOST=dummy \
+            -e DB_PORT=5432 \
+            -e DB_NAME=dummy \
+            -e DB_USER=dummy \
+            -e DB_PASSWORD=dummy \
+            api-stochastic-energy-dispatch
+
+      - name: Wait for API
+        run: sleep 5
+
+      - name: Test API health endpoint
+        run: curl --fail http://localhost:8000/

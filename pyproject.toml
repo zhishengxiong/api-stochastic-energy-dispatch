@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "api-stochastic-energy-dispatch"
 version = "0.0.0"
-description = "Two-stage stochastic energy dispatch for distribution networks."
+description = "API for running and managing two-stage stochastic energy dispatch in distribution networks."
 requires-python = ">=3.12"
 
 dependencies = [
@@ -24,6 +24,7 @@ dependencies = [
 test = [
     "pytest",
     "ruff",
+    "httpx2",
 ]
 
 [tool.setuptools.packages.find]
