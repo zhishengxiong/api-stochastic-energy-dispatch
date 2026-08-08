@@ -6,7 +6,6 @@ from fastapi.testclient import TestClient
 from stochastic_energy_dispatch import api
 from stochastic_energy_dispatch.case_schemas import TSSPRunResult
 
-
 client = TestClient(api.app)
 
 

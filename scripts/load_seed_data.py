@@ -1,17 +1,12 @@
 from pathlib import Path
-import sys
 
 import numpy as np
 import pandas as pd
 
+from stochastic_energy_dispatch.database import get_connection
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = PROJECT_ROOT / "data"
-
-sys.path.insert(0, str(PROJECT_ROOT))
-
-from stochastic_energy_dispatch.database import get_connection
-
 
 NETWORK_FILE = DATA_DIR / "IEEE33.xlsx"
 DERS_FILE = DATA_DIR / "DERs_Data_33.xlsx"

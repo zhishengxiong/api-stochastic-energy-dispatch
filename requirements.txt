@@ -1,9 +1,0 @@
-fastapi==0.141.1
-uvicorn==0.52.1
-psycopg==3.3.4
-psycopg-binary==3.3.4
-gurobipy==13.0.2
-numpy==2.2.4
-pandas==2.2.3
-scipy==1.15.2
-openpyxl==3.1.5

@@ -4,7 +4,6 @@ import numpy as np
 
 from stochastic_energy_dispatch import input_repository as repository
 
-
 NODE_COLUMN = "node_id"
 GENERATOR_ID_COLUMN = "generator_id"
 STORAGE_ID_COLUMN = "storage_id"

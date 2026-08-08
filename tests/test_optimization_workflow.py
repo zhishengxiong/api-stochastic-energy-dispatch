@@ -1,8 +1,8 @@
 from contextlib import contextmanager
 from types import SimpleNamespace
 
-from stochastic_energy_dispatch.case_schemas import TSSPRunConfig
 from stochastic_energy_dispatch import optimization_workflow
+from stochastic_energy_dispatch.case_schemas import TSSPRunConfig
 
 
 @contextmanager

@@ -3,7 +3,6 @@ from dataclasses import dataclass
 import numpy as np
 from gurobipy import GRB, Model, quicksum
 
-
 SLACK_NODE_ID = 1
 
 

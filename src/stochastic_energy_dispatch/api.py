@@ -12,7 +12,6 @@ from stochastic_energy_dispatch.case_schemas import TSSPRunConfig
 from stochastic_energy_dispatch.database import get_connection
 from stochastic_energy_dispatch.optimization_workflow import run_case
 
-
 logger = logging.getLogger(__name__)
 
 app = FastAPI()

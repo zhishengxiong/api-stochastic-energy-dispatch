@@ -5,6 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "stochastic-energy-dispatch"
 version = "0.0.0"
+description = "Two-stage stochastic energy dispatch for distribution networks."
 requires-python = ">=3.12"
 
 dependencies = [
@@ -19,5 +20,22 @@ dependencies = [
     "python-dotenv",
 ]
 
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "ruff",
+]
+
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B"]

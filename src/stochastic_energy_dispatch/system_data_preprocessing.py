@@ -4,7 +4,6 @@ import numpy as np
 
 from stochastic_energy_dispatch import input_repository as repository
 
-
 PD_BASE_COLUMN = "pd_base"
 FROM_COLUMN = "from_node"
 TO_COLUMN = "to_node"
