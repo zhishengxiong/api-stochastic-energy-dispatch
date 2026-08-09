@@ -17,6 +17,7 @@ IMPEDANCE_SCALING_FACTOR = 0.001
 
 @dataclass
 class SystemData:
+    num_nodes: int
     A: np.ndarray
     R_prime: np.ndarray
     X_prime: np.ndarray
@@ -121,9 +122,10 @@ def build_load_profiles(raw_nodes, raw_demand, T):
     return P_load, PD_base
 
 
-def build_system_data(connection, num_nodes, T):
+def build_system_data(connection, T):
     """Build network data required by the TSSP model."""
     raw_nodes, raw_lines, raw_demand = read_network_data(connection, T)
+    num_nodes = len(raw_nodes)
 
     _validate_network_data(raw_nodes, raw_lines, num_nodes)
 
@@ -140,6 +142,7 @@ def build_system_data(connection, num_nodes, T):
     P_load, PD_base = build_load_profiles(raw_nodes, raw_demand, T)
 
     return SystemData(
+        num_nodes=num_nodes,
         A=A,
         R_prime=R_prime,
         X_prime=X_prime,

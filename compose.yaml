@@ -21,7 +21,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       GRB_LICENSE_FILE: /app/gurobi.lic
     volumes:
-      - C:/Users/zhishengxiong/gurobi_wls.lic:/app/gurobi.lic:ro
+      - ${GUROBI_LICENSE_PATH}:/app/gurobi.lic:ro
     depends_on:
       - postgres_database
 

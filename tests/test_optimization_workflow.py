@@ -11,7 +11,7 @@ def _fake_connection():
 
 
 def test_run_case_orchestrates_full_workflow(monkeypatch):
-    system_data = object()
+    system_data = SimpleNamespace(num_nodes=33)
     ders_data = SimpleNamespace()
     samples_info = {
         "empirical_samples": object(),
@@ -27,7 +27,7 @@ def test_run_case_orchestrates_full_workflow(monkeypatch):
     monkeypatch.setattr(
         optimization_workflow.system,
         "build_system_data",
-        lambda connection, num_nodes, T: system_data,
+        lambda connection, T: system_data,
     )
 
     monkeypatch.setattr(

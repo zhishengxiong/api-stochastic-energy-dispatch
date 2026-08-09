@@ -6,8 +6,6 @@ from stochastic_energy_dispatch import tssp_model as tssp
 from stochastic_energy_dispatch.case_schemas import TSSPRunConfig, TSSPRunResult
 from stochastic_energy_dispatch.database import get_connection
 
-NUM_NODES = 33
-
 
 def run_case(config: TSSPRunConfig) -> TSSPRunResult:
     """Run the complete TSSP workflow and return its summary."""
@@ -15,7 +13,6 @@ def run_case(config: TSSPRunConfig) -> TSSPRunResult:
     with get_connection() as connection:
         system_data = system.build_system_data(
             connection,
-            NUM_NODES,
             config.T,
         )
 
@@ -35,7 +32,7 @@ def run_case(config: TSSPRunConfig) -> TSSPRunResult:
         system_data,
         ders_data,
         empirical_samples_info,
-        NUM_NODES,
+        system_data.num_nodes,
         config.T,
     )
 
@@ -45,7 +42,7 @@ def run_case(config: TSSPRunConfig) -> TSSPRunResult:
             connection,
             tssp_result,
             ders_data,
-            NUM_NODES,
+            system_data.num_nodes,
             config.T,
             config.num_samples,
         )

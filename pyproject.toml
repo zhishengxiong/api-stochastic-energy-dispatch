@@ -18,6 +18,7 @@ dependencies = [
     "scipy",
     "gurobipy",
     "python-dotenv",
+    "requests",
 ]
 
 [project.optional-dependencies]
