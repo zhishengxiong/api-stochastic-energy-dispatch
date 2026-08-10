@@ -30,7 +30,7 @@ The project integrates:
 
 ## Purpose
 
-Starting from an existing TSSP benchmark used as a comparison method in our research on distribution-network operation under uncertainty, the codebase was refactored to integrate relational database design, REST APIs, environment-based configuration, containerization, automated testing, code-quality checks, and CI. The underlying research application is described in:
+Starting from an existing TSSP benchmark used as a comparison method in our research on distribution-network operation under uncertainties associated with renewable generation and load demand, the codebase was refactored to integrate relational database design, REST APIs, environment-based configuration, containerization, automated testing, code-quality checks, and CI. The underlying research application is described in:
 
 > Zhisheng Xiong, Dimitris Boskos, Bo Zeng, Peter Palensky, Pedro P. Vergara,
 > **“Robust Operation of Distribution Networks: Generalized Uncertainty Modelling in Confidence-Level-Based Information Gap Decision,”**
@@ -411,7 +411,7 @@ The full optimization model is intentionally not solved in CI because optimizati
 
 ## Related Work
 
-For an algorithm-focused repository emphasizing uncertainty modeling and optimization methodology rather than backend engineering, see:
+For an algorithm-focused repository emphasizing uncertainty modeling and optimization methodology, see:
 
 [`cl-igdt-optimization-algorithm`](https://github.com/zhishengxiong/cl-igdt-optimization-algorithm)
 
